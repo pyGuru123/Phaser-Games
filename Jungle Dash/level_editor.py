@@ -57,12 +57,11 @@ font = pygame.font.SysFont('Futura', 24)
 # Empty world data
 levels = {}
 world_data = [[0 for j in range(cols)] for i in range(rows)]
-if os.path.exists(f'levels/levels.json'):
+if os.path.exists(f'levels/level.json'):
 	with open(f'levels/level.json', 'r') as file:
 		levels = json.load(file)
-		if current_level in levels:
-			world_data = levels[current_level]
-			
+		if str(current_level) in levels:
+			world_data = levels[str(current_level)]
 
 def draw_text(text_, font, color, pos):
 	text = font.render(text_, True, color)
@@ -209,10 +208,10 @@ rect = [initial_r, [1,1]]
 running = True
 while running:
 	for event in pygame.event.get():
-		if event.type == QUIT:
+		if event.type == pygame.QUIT:
 			running = False
 
-		if event.type == MOUSEBUTTONDOWN and clicked == False:
+		if event.type == pygame.MOUSEBUTTONDOWN and clicked == False:
 			clicked = True
 			pos = pygame.mouse.get_pos()
 			if pos[0] <= WIDTH:
@@ -240,18 +239,18 @@ while running:
 						rect = [r1, r2]
 
 
-		if event.type == KEYDOWN:
+		if event.type == pygame.KEYDOWN:
 			pos = rect[1]
-			if event.key == K_LEFT:
+			if event.key == pygame.K_LEFT:
 				if pos[0] > 0:
 					pos[0] -= 1
-			elif event.key == K_RIGHT:
+			elif event.key == pygame.K_RIGHT:
 				if pos[0] < cols-1:
 					pos[0] += 1
-			elif event.key == K_UP:
+			elif event.key == pygame.K_UP:
 				if pos[1] > 0:
 					pos[1] -= 1
-			elif event.key == K_DOWN:
+			elif event.key == pygame.K_DOWN:
 				if pos[1] < rows-1:
 					pos[1] += 1
 
@@ -278,7 +277,7 @@ while running:
 	if save_button.draw():
 		#save level data
 		with open(f'levels/level.json', 'w') as file:
-			levels[current_level] = world_data
+			levels[str(current_level)] = world_data
 			json.dump(levels, file)
 
 	if load_button.draw():
@@ -286,8 +285,8 @@ while running:
 		if os.path.exists(f'levels/levels.json'):
 			with open(f'levels/level.json', 'r') as file:
 				levels = json.load(file)
-				if current_level in levels:
-					world_data = levels[current_level]
+				if str(current_level) in levels:
+					world_data = levels[str(current_level)]
 				else:
 					world_data = [[0 for j in range(cols)] for i in range(rows)]
 
