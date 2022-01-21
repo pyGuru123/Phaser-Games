@@ -2,6 +2,7 @@ const WIDTH=864, HEIGHT=576;
 const TILESIZE = 48;
 const ROWS = HEIGHT / TILESIZE;
 const COLS = WIDTH / TILESIZE;
+const MAX_LEVEL = 2;
 
 var config = {
 	type: Phaser.AUTO,
@@ -32,6 +33,10 @@ function preload() {
 	this.load.image('fire2', 'tiles/16.png');
 	this.load.image('water1', 'tiles/19.png');
 	this.load.image('water2', 'tiles/20.png');
+	this.load.image('tree', 'tiles/21.png');
+	this.load.image('mushroom', 'tiles/22.png');
+	this.load.image('bee', 'tiles/23.png');
+	this.load.image('exit', 'tiles/24.png');
 	this.load.spritesheet('dude' ,'assets/player.png', {
 		frameWidth: 32, frameHeight: 48
 	})
@@ -56,12 +61,12 @@ function create() {
 	this.add.image(100, 120, 'sun');
 
 	// draw grid
-	for (let i=0; i<ROWS; i++) {
-		this.add.line(0, 0, 0, TILESIZE*i, WIDTH, TILESIZE*i, 0x1a65ac).setOrigin(0);
-	}
-	for (let j=0; j<COLS; j++) {
-		this.add.line(0, 0, TILESIZE*j, 0, TILESIZE*j, HEIGHT, 0x1a65ac).setOrigin(0);
-	}
+	// for (let i=0; i<ROWS; i++) {
+	// 	this.add.line(0, 0, 0, TILESIZE*i, WIDTH, TILESIZE*i, 0x1a65ac).setOrigin(0);
+	// }
+	// for (let j=0; j<COLS; j++) {
+	// 	this.add.line(0, 0, TILESIZE*j, 0, TILESIZE*j, HEIGHT, 0x1a65ac).setOrigin(0);
+	// }
 
 	// keypress Events
 	cursor = this.input.keyboard.createCursorKeys();
@@ -70,6 +75,9 @@ function create() {
 	platforms = this.physics.add.staticGroup();
 	diamonds = this.physics.add.staticGroup();
 	firewater = this.physics.add.staticGroup();
+	greens = this.physics.add.staticGroup();
+	exits = this.physics.add.staticGroup();
+	bees = this.physics.add.group();
 
 	// loading levels
 	var levels = this.cache.json.get('levels');
@@ -104,9 +112,12 @@ function create() {
 
 	// Collision Detection
 	this.physics.add.collider(player, platforms);
-	this.physics.add.collider(player, diamonds, collectDiamonds, null, this);
 	this.physics.add.collider(player, firewater, gameOver, null, this);
+	this.physics.add.overlap(player, diamonds, collectDiamonds, null, this);
+	this.physics.add.overlap(player, exits, gameWon, null, this);
 
+	// Text Objects
+	levelText = this.add.text(WIDTH-200, 20, `Level : ${level}`, {fontSize:'32px', fill:'#000'})
 
 	// draw border
 	var rect = this.add.rectangle(0, 0, WIDTH, HEIGHT).setOrigin(0);
@@ -129,10 +140,9 @@ function update() {
 		}
 
 		if (cursor.up.isDown && player.body.touching.down) {
-			player.setVelocityY(-300)
+			player.setVelocityY(-350)
 		}
 	}
-
 }
 
 function loadLevelSetup(levels, level) {
@@ -140,19 +150,17 @@ function loadLevelSetup(levels, level) {
 	for (let i=0; i<level_data.length; i++) {
 		for (let j=0; j<level_data[0].length; j++) {
 			data = level_data[i][j];
+			[x, y] = getPos(i, j);
+
 			if (data && data <= 13) {
-				platforms.create(TILESIZE*(j+1)-24, TILESIZE*(i+1)-24,
-								`tile${data}`).setScale(0.4).refreshBody();
+				platforms.create(x, y,`tile${data}`).setScale(0.4).refreshBody();
 			}
 
 			if (data && data == 17) {
-				diamonds.create(TILESIZE*(j+1)-24, TILESIZE*(i+1)-24,
-								`d${randint(1, 4)}`).setScale(0.4).refreshBody();
-
+				diamonds.create(x, y,`d${randint(1, 4)}`).setScale(0.4).refreshBody();
 			}
 
 			if (data == 15 || data == 16) {
-				[x, y] = getPos(i, j);
 				firewater.create(x, y,`fire${data-14}`).setScale(0.4).refreshBody();
 			}
 
@@ -160,6 +168,23 @@ function loadLevelSetup(levels, level) {
 				offy = data == 19 ? 10 : 0;
 				[x, y] = getPos(i, j, 0, offy);
 				firewater.create(x, y,`water${data-18}`).setScale(0.4).refreshBody();
+			}
+
+			if (data == 21) {
+				greens.create(x, y-34, 'tree');
+			}
+
+			if (data == 22) {
+				greens.create(x, y+12, 'mushroom');
+			}
+
+			if (data == 23) {
+				bee = bees.create(x, y, 'bee').setScale(0.4);
+				bee.setBounce(1);
+			}
+
+			if (data == 24) {
+				exits.create(x, y, 'exit');
 			}
 		}
 	}
@@ -175,8 +200,15 @@ function collectDiamonds(player, diamond){
 
 function gameOver(player, tile) {
 	player.setTint(0xff0000);
-	// this.physics.pause();
+	this.physics.pause();
 	gameover = true;
+}
+
+function gameWon(player, tile) {
+	if (level < MAX_LEVEL) {
+		level += 1;
+		this.scene.restart();
+	}
 }
 
 function randint(a, b) {

@@ -253,6 +253,8 @@ while running:
 			elif event.key == pygame.K_DOWN:
 				if pos[1] < rows-1:
 					pos[1] += 1
+			elif event.key == pygame.K_r:
+				world_data[pos[1]][pos[0]] = 0
 
 			rect[0] = pygame.Rect(pos[0]*tile_size, pos[1]*tile_size, tile_size, tile_size)
 			rect[1] = pos
@@ -282,7 +284,7 @@ while running:
 
 	if load_button.draw():
 		#load in level data
-		if os.path.exists(f'levels/levels.json'):
+		if os.path.exists(f'levels/level.json'):
 			with open(f'levels/level.json', 'r') as file:
 				levels = json.load(file)
 				if str(current_level) in levels:
