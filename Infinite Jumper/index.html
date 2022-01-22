@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Infinite Jumper</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <style type="text/css">
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: rgb(18, 18, 18);
+        }
+
+        .main {
+            width: 288px;
+            height: 512px;
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div class="main"></div>
+
+    <script type="text/javascript">
+        const WIDTH = 288, HEIGHT = 512;
+
+        var config = {
+            type: Phaser.AUTO,
+            width: WIDTH,
+            height: HEIGHT,
+            physics: {
+                dafault: 'arcade',
+                arcade: {
+                    gravity: {y:300},
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        }
+
+        var game = new Phaser.Game(config, {scale : {
+            parent: 'main',
+            autoCenter: Phaser.Scale.CENTER_BOTH
+        }});
+
+
+        function preload() {
+
+        }
+
+        function create() {
+
+        }
+
+        function update() {
+
+        }
+    </script>
+</body>
+</html>
