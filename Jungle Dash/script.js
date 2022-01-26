@@ -23,7 +23,7 @@ var config = {
 }
 
 var game = new Phaser.Game(config);
-var level = 1;
+var level = 2;
 var gameover = false;
 
 function preload() {
@@ -61,12 +61,7 @@ function create() {
 	this.add.image(100, 120, 'sun');
 
 	// draw grid
-	// for (let i=0; i<ROWS; i++) {
-	// 	this.add.line(0, 0, 0, TILESIZE*i, WIDTH, TILESIZE*i, 0x1a65ac).setOrigin(0);
-	// }
-	// for (let j=0; j<COLS; j++) {
-	// 	this.add.line(0, 0, TILESIZE*j, 0, TILESIZE*j, HEIGHT, 0x1a65ac).setOrigin(0);
-	// }
+	drawGrid(this);
 
 	// keypress Events
 	cursor = this.input.keyboard.createCursorKeys();
@@ -81,7 +76,7 @@ function create() {
 
 	// loading levels
 	var levels = this.cache.json.get('levels');
-	loadLevelSetup(levels, level);
+	loadLevelSetup(levels, level, this);
 
 	// creating player
 	player = this.physics.add.sprite(100, 300, 'dude');
@@ -145,7 +140,7 @@ function update() {
 	}
 }
 
-function loadLevelSetup(levels, level) {
+function loadLevelSetup(levels, level, scene) {
 	level_data = levels[level];
 	for (let i=0; i<level_data.length; i++) {
 		for (let j=0; j<level_data[0].length; j++) {
@@ -179,8 +174,10 @@ function loadLevelSetup(levels, level) {
 			}
 
 			if (data == 23) {
-				bee = bees.create(x, y, 'bee').setScale(0.4);
-				bee.setBounce(1);
+				let bee = new Bee({scene:scene, x: x, y:y})
+				bee.setScale(0.5);
+				bee.allowGravity = false;
+				bees.add(bee);
 			}
 
 			if (data == 24) {
@@ -208,6 +205,15 @@ function gameWon(player, tile) {
 	if (level < MAX_LEVEL) {
 		level += 1;
 		this.scene.restart();
+	}
+}
+
+function drawGrid(scene) {
+	for (let i=0; i<ROWS; i++) {
+		scene.add.line(0, 0, 0, TILESIZE*i, WIDTH, TILESIZE*i, 0x1a65ac).setOrigin(0);
+	}
+	for (let j=0; j<COLS; j++) {
+		scene.add.line(0, 0, TILESIZE*j, 0, TILESIZE*j, HEIGHT, 0x1a65ac).setOrigin(0);
 	}
 }
 
