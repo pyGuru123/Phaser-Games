@@ -4,21 +4,19 @@ class Bee extends Phaser.GameObjects.Sprite {
 		config.scene.add.existing(this);
 		config.scene.physics.add.existing(this);
 
-		this.initial = [config.x, config.y];
 		this.x = config.x;
 		this.y = config.y;
-		this.speed = 5;
-	}
 
-	preUpdate() {
-		if  (this.y < this.initial[1] - 100) {
-			this.speed *= -1;
-		}
-		if (this.y > this.initial[1] + 100) {
-			this.speed *= -1;
-		}
+		config.scene.tweens.add({
+			targets : this.body.velocity,
+			y : {from: -150, to: 150},
+			ease: Phaser.Math.Easing.Quadratic.InOut,
+			yoyo: true,
+			repeat: -1,
+			duration: 1000,
+			delay: Phaser.Math.Between(0,6) * 200
+		})
 
-		this.y += this.speed;
-		this.setY(this.y);
+
 	}
 }
