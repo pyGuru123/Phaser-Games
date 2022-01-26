@@ -16,7 +16,5 @@ class Bee extends Phaser.GameObjects.Sprite {
 			duration: 1000,
 			delay: Phaser.Math.Between(0,6) * 200
 		})
-
-
 	}
 }

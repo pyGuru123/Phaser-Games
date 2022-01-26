@@ -23,7 +23,7 @@ var config = {
 }
 
 var game = new Phaser.Game(config);
-var level = 2;
+var level = 1;
 var gameover = false;
 
 function preload() {
@@ -38,6 +38,7 @@ function preload() {
 	this.load.image('bee', 'tiles/23.png');
 	this.load.image('exit', 'tiles/24.png');
 	this.load.image('flower', 'tiles/27.png');
+	this.load.image('slime', 'tiles/29.png');
 	this.load.spritesheet('dude' ,'assets/player.png', {
 		frameWidth: 32, frameHeight: 48
 	})
@@ -52,7 +53,6 @@ function preload() {
 		this.load.image(`d${i+1}`, `assets/d${i+1}.png`);
 	}
 
-	// this.load.json('levels', 'https://raw.githubusercontent.com/pyGuru123/Phaser-Games/main/Jungle%20Dash/levels/level1_data.json')
 	this.load.json('levels', 'levels/level.json')
 }
 
@@ -62,7 +62,7 @@ function create() {
 	this.add.image(100, 120, 'sun');
 
 	// draw grid
-	drawGrid(this);
+	// drawGrid(this);
 
 	// keypress Events
 	cursor = this.input.keyboard.createCursorKeys();
@@ -80,31 +80,7 @@ function create() {
 	loadLevelSetup(levels, level, this);
 
 	// creating player
-	player = this.physics.add.sprite(100, 300, 'dude');
-	player.body.setGravityY(300);
-	player.setBounce(0.2);
-	player.setCollideWorldBounds(true);
-
-	// player animations
-    this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', {start: 0, end: 3}),
-        frameRate: 10,
-        repeat: -1
-    })
-
-    this.anims.create({
-        key: 'turn',
-        frames: [{key: 'dude', frame: 4}],
-        frameRate: 20
-    })
-
-    this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', {start: 5, end: 8}),
-        frameRate: 10,
-        repeat: -1
-    })
+	var player = new Player({scene:this, x: 100, y:300});
 
 	// Collision Detection
 	this.physics.add.collider(player, platforms);
@@ -124,20 +100,20 @@ function create() {
 function update() {
 	if (!gameover) {
 		if (cursor.left.isDown) {
-			player.setVelocityX(-100);
+			player.body.setVelocityX(-100);
 			player.anims.play('left', true);
 		}
 		else if (cursor.right.isDown) {
-			player.setVelocityX(100);
+			player.body.setVelocityX(100);
 			player.anims.play('right', true);
 		}
 		else {
-			player.setVelocityX(0);
+			player.body.setVelocityX(0);
 			player.anims.play('turn', true);
 		}
 
 		if (cursor.up.isDown && player.body.touching.down) {
-			player.setVelocityY(-350)
+			player.body.setVelocityY(-350)
 		}
 	}
 }
