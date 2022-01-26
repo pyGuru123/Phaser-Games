@@ -74,20 +74,22 @@ function create() {
 	greens = this.physics.add.staticGroup();
 	exits = this.physics.add.staticGroup();
 	bees = this.physics.add.group({allowGravity:false});
+	slimes = this.physics.add.group({allowGravity:false});
 
 	// loading levels
 	var levels = this.cache.json.get('levels');
 	loadLevelSetup(levels, level, this);
 
 	// creating player
-	var player = new Player({scene:this, x: 100, y:300});
+	player = new Player({scene:this, x: 100, y:300});
 
 	// Collision Detection
 	this.physics.add.collider(player, platforms);
 	this.physics.add.collider(player, firewater, gameOver, null, this);
+	this.physics.add.collider(player, bees, gameOver, null, this);
+	this.physics.add.collider(player, slimes, gameOver, null, this);
 	this.physics.add.overlap(player, diamonds, collectDiamonds, null, this);
 	this.physics.add.overlap(player, exits, gameWon, null, this);
-	this.physics.add.collider(player, bees, gameOver, null, this);
 
 	// Text Objects
 	levelText = this.add.text(WIDTH-200, 20, `Level : ${level}`, {fontSize:'32px', fill:'#000'})
@@ -152,7 +154,7 @@ function loadLevelSetup(levels, level, scene) {
 			}
 
 			if (data == 23) {
-				let bee = new Bee({scene:scene, x: x, y:y})
+				var bee = new Bee({scene:scene, x: x, y:y})
 				bee.setScale(0.5);
 				bees.add(bee);
 			}
@@ -164,6 +166,12 @@ function loadLevelSetup(levels, level, scene) {
 			if (data == 27) {
 				var flower = greens.create(x, y, 'flower');
 				flower.setScale(0.2);
+			}
+
+			if (data == 29) {
+				var slime = new Slime({scene:scene, x: x, y:y+15, distance:50});
+				slime.setScale(0.5);
+				slimes.add(slime);
 			}
 		}
 	}
