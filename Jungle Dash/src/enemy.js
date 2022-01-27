@@ -6,6 +6,7 @@ class Bee extends Phaser.GameObjects.Sprite {
 
 		this.x = config.x;
 		this.y = config.y;
+		this.side = 0;
 
 		config.scene.tweens.add({
 			targets : this.body.velocity,
@@ -16,6 +17,15 @@ class Bee extends Phaser.GameObjects.Sprite {
 			duration: 1000,
 			delay: Phaser.Math.Between(0,6) * 200
 		})
+	}
+
+	preUpdate() {
+		if (player.x < this.x) {
+			this.resetFlip();
+		}
+		if (player.x > this.x) {
+			this.flipX = true;
+		}
 	}
 }
 

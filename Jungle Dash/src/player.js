@@ -8,6 +8,9 @@ class Player extends Phaser.GameObjects.Sprite {
 		this.body.setBounce(0.2);
 		this.body.setCollideWorldBounds(true);
 
+		this.isOnPlatform = false;
+		this.currentPlatform = null;
+
 		config.scene.anims.create({
 	        key: 'left',
 	        frames: config.scene.anims.generateFrameNumbers('dude', {start: 0, end: 3}),
@@ -27,5 +30,14 @@ class Player extends Phaser.GameObjects.Sprite {
 	        frameRate: 10,
 	        repeat: -1
 	    })
+	}
+
+	preUpdate() {
+		if  (player.isOnPlatform && player.currentPlatform) {
+		    player.body.position.x += player.currentPlatform.vx;
+		    player.body.position.y += player.currentPlatform.vy;
+		    player.isOnPlatform = false;
+		    player.currentPlatform = null;
+	    }
 	}
 }
