@@ -23,7 +23,7 @@ var config = {
 }
 
 var game = new Phaser.Game(config);
-var level = 5;
+var level = 6;
 var gameover = false;
 
 function preload() {
@@ -168,9 +168,9 @@ function loadLevelSetup(levels, level, scene) {
 				exits.create(x, y, 'exit');
 			}
 
-			if (data == 26) {
-				var movingp = new MovingPlatform({scene:scene, x:x, y:y, key:'movingp'})
-				scene.physics.world.enable(movingp);
+			if (data == 25 || data == 26) {
+				type = data == 25 ? 'side' : 'up';
+				var movingp = new MovingPlatform({scene:scene, x:x, y:y, key:'movingp', type:type})
 				movingPlatforms.add(movingp);
 			}
 
@@ -211,10 +211,10 @@ function gameWon(player, tile) {
 
 function collisionMovingPlatform(player, platform) {
 	if (platform.body.touching.up && player.body.touching.down){
-		if (player.body.y > platform.body.y) {
-			player.isOnPlatform = true;
-			player.currentPlatform = platform;
-		}
+		if (platform.body.y > player.body.y) {
+		    player.body.x += platform.vx;
+		    player.body.y += platform.vy;
+	    }
 	}
 }
 
