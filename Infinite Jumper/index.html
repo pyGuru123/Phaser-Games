@@ -12,7 +12,7 @@
             background-color: rgb(18, 18, 18);
         }
 
-        .main {
+        canvas {
             width: 288px;
             height: 512px;
             top: 50%;
@@ -24,46 +24,6 @@
     </style>
 </head>
 <body>
-    <div class="main"></div>
-
-    <script type="text/javascript">
-        const WIDTH = 288, HEIGHT = 512;
-
-        var config = {
-            type: Phaser.AUTO,
-            width: WIDTH,
-            height: HEIGHT,
-            physics: {
-                dafault: 'arcade',
-                arcade: {
-                    gravity: {y:300},
-                    debug: false
-                }
-            },
-            scene: {
-                preload: preload,
-                create: create,
-                update: update
-            }
-        }
-
-        var game = new Phaser.Game(config, scale : {
-            parent: 'main',
-            autoCenter: Phaser.Scale.CENTER_BOTH
-        });
-
-
-        function preload() {
-
-        }
-
-        function create() {
-
-        }
-
-        function update() {
-
-        }
-    </script>
+    <script type='module' src='src/script.js'></script>
 </body>
 </html>

@@ -2,7 +2,7 @@ const WIDTH=864, HEIGHT=576;
 const TILESIZE = 48;
 const ROWS = HEIGHT / TILESIZE;
 const COLS = WIDTH / TILESIZE;
-const MAX_LEVEL = 5;
+const MAX_LEVEL = 6;
 
 var config = {
 	type: Phaser.AUTO,
@@ -23,7 +23,7 @@ var config = {
 }
 
 var game = new Phaser.Game(config);
-var level = 6;
+var level = 1;
 var gameover = false;
 
 function preload() {
@@ -199,7 +199,7 @@ function collectDiamonds(player, diamond){
 function gameOver(player, tile) {
 	player.setTint(0xff0000);
 	this.physics.pause();
-	gameover = true;
+	this.scene.restart();
 }
 
 function gameWon(player, tile) {
