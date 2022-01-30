@@ -3,7 +3,7 @@
 Jungle dash is my Phaser 3 game. It's available to play on itch.io [here](https://itspyguru.itch.io/jungledash)
 
 <p align='center'>
-  <img src='app.png' width=400 height=300>
+  <img src='app.png' width=600 height=400>
 </p>
 
 
